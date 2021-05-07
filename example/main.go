@@ -18,4 +18,11 @@ func main() {
 
 	data, _ := json.Marshal(reports)
 	log.Printf("%s", data)
+
+	liveNews, err := xueqiu.GetLiveNews(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("live_news: %+v", liveNews)
 }
