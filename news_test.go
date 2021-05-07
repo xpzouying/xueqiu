@@ -9,9 +9,9 @@ import (
 
 func TestGetLiveNews(t *testing.T) {
 
-	m, err := GetLiveNews(context.Background())
+	res, err := GetLiveNews(context.Background())
 
 	assert.NoError(t, err)
-	assert.NotNil(t, m)
-	assert.NotNil(t, m["items"])
+	assert.NotNil(t, res)
+	assert.NotNil(t, res.Items)
 }
