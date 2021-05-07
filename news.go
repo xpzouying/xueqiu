@@ -8,14 +8,20 @@ import (
 	"github.com/pkg/errors"
 )
 
-// 7*24小时新闻
-const liveNewsURL = "https://xueqiu.com/statuses/livenews/list.json?since_id=-1&max_id=-1&count=10"
+const (
+	// 7*24小时新闻
+	liveNewsURL = "https://xueqiu.com/statuses/livenews/list.json?since_id=-1&max_id=-1&count=10"
+
+	// 7*24重要新闻
+	liveMarkNewsURL = "https://api.xueqiu.com/statuses/livenews/mark/list.json?max_id=-1&since_id=-1&size=20"
+)
 
 type liveNews struct {
 	ID        int    `json:"id"`
 	Text      string `json:"text"`
 	Target    string `json:"target"`
 	CreatedAt int64  `json:"created_at"` // unix时间戳，单位ms
+	Mark      int    `json:"mark"`       // mark=1表示是重要新闻
 }
 
 type RespLiveNews struct {
@@ -32,9 +38,21 @@ func newGetLiveNewsRequest(url string) (req *http.Request, err error) {
 	return
 }
 
+// GetMarkLiveNews 获取7*24重要新闻
+func GetMarkLiveNews(ctx context.Context) (*RespLiveNews, error) {
+
+	return doGetLiveNews(ctx, liveMarkNewsURL)
+}
+
+// GetLiveNews 获取7*24新闻
 func GetLiveNews(ctx context.Context) (*RespLiveNews, error) {
 
-	req, err := newGetLiveNewsRequest(liveNewsURL)
+	return doGetLiveNews(ctx, liveNewsURL)
+}
+
+func doGetLiveNews(ctx context.Context, url string) (*RespLiveNews, error) {
+
+	req, err := newGetLiveNewsRequest(url)
 	if err != nil {
 		return nil, err
 	}

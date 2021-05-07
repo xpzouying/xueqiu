@@ -15,3 +15,11 @@ func TestGetLiveNews(t *testing.T) {
 	assert.NotNil(t, res)
 	assert.NotNil(t, res.Items)
 }
+
+func TestGetMarkLiveNews(t *testing.T) {
+	res, err := GetMarkLiveNews(context.Background())
+
+	assert.NoError(t, err)
+	assert.NotNil(t, res)
+	assert.NotNil(t, res.Items)
+}
