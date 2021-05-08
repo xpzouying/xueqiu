@@ -28,3 +28,12 @@ func xqCookie() *http.Cookie {
 		Value: xqtoken,
 	}
 }
+
+func newGetRequestWithCookie(url string) (req *http.Request, err error) {
+	if req, err = http.NewRequest(http.MethodGet, url, nil); err != nil {
+		return
+	}
+	req.AddCookie(xqCookie())
+
+	return
+}

@@ -24,22 +24,13 @@ type RespCompanyReports struct {
 	List []*CompanyReport `json:"list"`
 }
 
-func newGetRequest(url string) (req *http.Request, err error) {
-	if req, err = http.NewRequest(http.MethodGet, url, nil); err != nil {
-		return
-	}
-	req.AddCookie(xqCookie())
-
-	return
-}
-
 const reportURLPrefix = "https://stock.xueqiu.com/stock/report/latest.json?symbol="
 
 func GetCompanyReport(ctx context.Context, stock string) ([]*CompanyReport, error) {
 
 	url := reportURLPrefix + stock
 
-	req, err := newGetRequest(url)
+	req, err := newGetRequestWithCookie(url)
 	if err != nil {
 		return nil, err
 	}
