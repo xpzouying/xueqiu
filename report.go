@@ -2,8 +2,6 @@ package xueqiu
 
 import (
 	"context"
-	"encoding/json"
-	"net/http"
 	"time"
 
 	"github.com/pkg/errors"
@@ -26,27 +24,15 @@ type RespCompanyReports struct {
 
 const reportURLPrefix = "https://stock.xueqiu.com/stock/report/latest.json?symbol="
 
-func GetCompanyReport(ctx context.Context, stock string) ([]*CompanyReport, error) {
+func (xq *Xueqiu) GetCompanyReport(ctx context.Context, stock string) ([]*CompanyReport, error) {
+	if len(stock) == 0 {
+		return nil, errors.New("empty stock code")
+	}
 
 	url := reportURLPrefix + stock
 
-	req, err := newGetRequestWithCookie(url)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := c.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if code := resp.StatusCode; code != http.StatusOK {
-		return nil, errors.Errorf("http status code not ok: %v", code)
-	}
-
 	var reports RespCompanyReports
-	if err := json.NewDecoder(resp.Body).Decode(&reports); err != nil {
+	if err := xq.httpGetAndDecode(ctx, url, &reports); err != nil {
 		return nil, err
 	}
 

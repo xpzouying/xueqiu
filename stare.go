@@ -2,10 +2,8 @@ package xueqiu
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/url"
-	"time"
 )
 
 const countOfStare = 10 // 获取的item个数限制，app中默认为50。
@@ -46,40 +44,29 @@ type RespStareItem struct {
 }
 
 // GetDynamicStareItem 获取关注动态
-func GetDynamicStareItems(ctx context.Context) (*RespStareItem, error) {
+func (xq *Xueqiu) GetDynamicStareItems(ctx context.Context) (*RespStareItem, error) {
 
-	return getStareItems(ctx, CateDynamic)
+	return xq.getStareItems(ctx, CateDynamic)
 }
 
 // GetEventStareItem 获取关注动态
-func GetEventStareItems(ctx context.Context) (*RespStareItem, error) {
+func (xq *Xueqiu) GetEventStareItems(ctx context.Context) (*RespStareItem, error) {
 
-	return getStareItems(ctx, CateEvent)
+	return xq.getStareItems(ctx, CateEvent)
 }
 
-func getStareItems(ctx context.Context, cateType CategoryType) (*RespStareItem, error) {
+func (xq *Xueqiu) getStareItems(ctx context.Context, cateType CategoryType) (*RespStareItem, error) {
 	// url
 	// https://stock.xueqiu.com/v5/stock/stare/list.json?
 	//	count=-50&start=1620397068604&type=event
 
-	u, err := makeGetStareURL(cateType)
+	url, err := makeGetStareURL(cateType)
 	if err != nil {
 		return nil, err
 	}
-
-	req, err := newGetRequestWithCookie(u)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := c.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
 
 	var res RespStareItem
-	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+	if err := xq.httpGetAndDecode(ctx, url, &res); err != nil {
 		return nil, err
 	}
 
@@ -99,7 +86,7 @@ func makeGetStareURL(cateType CategoryType) (string, error) {
 
 	q := u.Query()
 
-	q.Set("start", fmt.Sprintf("%v", time.Now().Local().UnixNano()))
+	q.Set("start", fmt.Sprintf("%v", makeTimestampMillisecond()))
 	q.Set("type", string(cateType))
 
 	u.RawQuery = q.Encode()

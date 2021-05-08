@@ -2,10 +2,6 @@ package xueqiu
 
 import (
 	"context"
-	"encoding/json"
-	"net/http"
-
-	"github.com/pkg/errors"
 )
 
 const (
@@ -30,45 +26,21 @@ type RespLiveNews struct {
 	Items     []*liveNews `json:"items,omitempty"`
 }
 
-func newGetLiveNewsRequest(url string) (req *http.Request, err error) {
-	if req, err = http.NewRequest(http.MethodGet, url, nil); err != nil {
-		return
-	}
-	req.AddCookie(xqCookie())
-	return
-}
-
 // GetMarkLiveNews 获取7*24重要新闻
-func GetMarkLiveNews(ctx context.Context) (*RespLiveNews, error) {
+func (xq *Xueqiu) GetMarkLiveNews(ctx context.Context) (*RespLiveNews, error) {
 
-	return doGetLiveNews(ctx, liveMarkNewsURL)
+	return xq.doGetLiveNews(ctx, liveMarkNewsURL)
 }
 
 // GetLiveNews 获取7*24新闻
-func GetLiveNews(ctx context.Context) (*RespLiveNews, error) {
+func (xq *Xueqiu) GetLiveNews(ctx context.Context) (*RespLiveNews, error) {
 
-	return doGetLiveNews(ctx, liveNewsURL)
+	return xq.doGetLiveNews(ctx, liveNewsURL)
 }
 
-func doGetLiveNews(ctx context.Context, url string) (*RespLiveNews, error) {
-
-	req, err := newGetLiveNewsRequest(url)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := c.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	if code := resp.StatusCode; code != http.StatusOK {
-		return nil, errors.Errorf("get_live_news failed, status_code=%d", code)
-	}
-
+func (xq *Xueqiu) doGetLiveNews(ctx context.Context, url string) (*RespLiveNews, error) {
 	var result RespLiveNews
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+	if err := xq.httpGetAndDecode(ctx, url, &result); err != nil {
 		return nil, err
 	}
 
