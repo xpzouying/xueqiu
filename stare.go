@@ -18,10 +18,6 @@ const (
 type StareItem struct {
 	Stock
 
-	// Symbol       string        `json:"symbol"`     // 股票代码
-	// Name         string        `json:"name"`       // 股票中文名字
-	// Type         StareItemType `json:"type"`
-
 	Timestamp    int64        `json:"timestamp"`  // 时间戳。单位ms
 	StareKey     string       `json:"stare_key"`  // 小icon，fall。
 	StareType    string       `json:"stare_type"` // 小icon，跌幅。

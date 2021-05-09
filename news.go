@@ -12,7 +12,7 @@ const (
 	liveMarkNewsURL = "https://api.xueqiu.com/statuses/livenews/mark/list.json?max_id=-1&since_id=-1&size=20"
 )
 
-type liveNews struct {
+type LiveNews struct {
 	ID        int    `json:"id"`
 	Text      string `json:"text"`
 	Target    string `json:"target"`
@@ -23,7 +23,7 @@ type liveNews struct {
 type RespLiveNews struct {
 	NextMaxID int         `json:"next_max_id,omitempty"` // 当前items中，最早的一条新闻的id。
 	NextID    int         `json:"next_id,omitempty"`     // 目前还不知道是什么。
-	Items     []*liveNews `json:"items,omitempty"`
+	Items     []*LiveNews `json:"items,omitempty"`
 }
 
 // GetMarkLiveNews 获取7*24重要新闻
