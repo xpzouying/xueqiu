@@ -34,18 +34,18 @@ type RespStareItem struct {
 }
 
 // GetDynamicStareItem 获取关注动态
-func (xq *Xueqiu) GetDynamicStareItems(ctx context.Context) (*RespStareItem, error) {
+func (xq *Xueqiu) GetDynamicStareItems(ctx context.Context) ([]*StareItem, error) {
 
 	return xq.getStareItems(ctx, CateDynamic)
 }
 
 // GetEventStareItem 获取关注动态
-func (xq *Xueqiu) GetEventStareItems(ctx context.Context) (*RespStareItem, error) {
+func (xq *Xueqiu) GetEventStareItems(ctx context.Context) ([]*StareItem, error) {
 
 	return xq.getStareItems(ctx, CateEvent)
 }
 
-func (xq *Xueqiu) getStareItems(ctx context.Context, cateType CategoryType) (*RespStareItem, error) {
+func (xq *Xueqiu) getStareItems(ctx context.Context, cateType CategoryType) ([]*StareItem, error) {
 	// url
 	// https://stock.xueqiu.com/v5/stock/stare/list.json?
 	//	count=-50&start=1620397068604&type=event
@@ -60,7 +60,7 @@ func (xq *Xueqiu) getStareItems(ctx context.Context, cateType CategoryType) (*Re
 		return nil, err
 	}
 
-	return &res, nil
+	return res.Data.Items, nil
 }
 
 func makeGetStareURL(cateType CategoryType) (string, error) {
