@@ -11,7 +11,7 @@ const (
 	userFavoriteStockURL = "https://stock.xueqiu.com/v5/stock/portfolio/stock/list.json?size=1000&category=1&pid=-1"
 )
 
-type favStock struct {
+type FavStock struct {
 	Stock
 
 	Remark   string `json:"remark"`
@@ -23,7 +23,7 @@ type UserStocks struct {
 	Pid      int `json:"pid"`
 	Category int `json:"category"`
 
-	Stocks []*favStock `json:"stocks"`
+	Stocks []*FavStock `json:"stocks"`
 }
 
 type RespUserStocks struct {
@@ -48,7 +48,7 @@ func (xq *Xueqiu) GetUserStocks(ctx context.Context) (*UserStocks, error) {
 }
 
 type StockReports struct {
-	FavStock       *favStock
+	FavStock       *FavStock
 	CompanyReports []*CompanyReport
 }
 
