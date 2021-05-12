@@ -26,7 +26,7 @@ func TestGetStareItems(t *testing.T) {
 	ts := []struct {
 		testname string
 
-		fn func(ctx context.Context) (*RespStareItem, error)
+		fn func(ctx context.Context) ([]*StareItem, error)
 	}{
 		{"获取关注的异常波动", xq.GetDynamicStareItems},
 		{"获取关注的重大事件", xq.GetEventStareItems},
