@@ -14,6 +14,7 @@ type CompanyReport struct {
 	TargetPriceMin  float32 `json:"target_price_min"`
 	TargetPrinceMax float32 `json:"target_prince_max"`
 
+	StatusID    int    `json:"status_id"`              // 猜测是这篇评论的id
 	PubDate     int64  `json:"pub_date,omitempty"`     // 雪球正常返回结果，unix时间戳(ms)
 	PublishDate string `json:"publish_date,omitempty"` // 使用日期返回
 }
@@ -49,7 +50,6 @@ func (xq *Xueqiu) GetCompanyReport(ctx context.Context, stockSymbol string) ([]*
 	for i := 0; i < len(validReports); i++ {
 		unixSec := validReports[i].PubDate / 1000
 		validReports[i].PublishDate = time.Unix(unixSec, 0).Format("2006-01-02")
-		validReports[i].PubDate = 0
 	}
 
 	return validReports, nil
