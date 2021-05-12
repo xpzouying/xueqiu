@@ -22,27 +22,35 @@ type RespCompanyReports struct {
 	List []*CompanyReport `json:"list"`
 }
 
-const reportURLPrefix = "https://stock.xueqiu.com/stock/report/latest.json?symbol="
+const (
+	reportURLPrefix = "https://stock.xueqiu.com/stock/report/latest.json?symbol="
 
-func (xq *Xueqiu) GetCompanyReport(ctx context.Context, stock string) ([]*CompanyReport, error) {
-	if len(stock) == 0 {
+	limitReportCount = 5
+)
+
+func (xq *Xueqiu) GetCompanyReport(ctx context.Context, stockSymbol string) ([]*CompanyReport, error) {
+	if len(stockSymbol) == 0 {
 		return nil, errors.New("empty stock code")
 	}
 
-	url := reportURLPrefix + stock
+	url := reportURLPrefix + stockSymbol
 
 	var reports RespCompanyReports
 	if err := xq.httpGetAndDecode(ctx, url, &reports); err != nil {
 		return nil, err
 	}
 
-	// publish date不使用unix毫秒，使用正常日期
-	list := reports.List
-	for i := 0; i < len(list); i++ {
-		unixSec := list[i].PubDate / 1000
-		list[i].PublishDate = time.Unix(unixSec, 0).Format("2006-01-02")
-		list[i].PubDate = 0
+	validReports := reports.List
+	if len(validReports) >= limitReportCount {
+		validReports = reports.List[:limitReportCount]
 	}
 
-	return list, nil
+	// publish date不使用unix毫秒，使用正常日期
+	for i := 0; i < len(validReports); i++ {
+		unixSec := validReports[i].PubDate / 1000
+		validReports[i].PublishDate = time.Unix(unixSec, 0).Format("2006-01-02")
+		validReports[i].PubDate = 0
+	}
+
+	return validReports, nil
 }

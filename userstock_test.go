@@ -12,11 +12,31 @@ func TestGetUserStocks(t *testing.T) {
 	xq, err := NewWithEnvToken()
 	assert.NoError(t, err)
 
-	resp, err := xq.GetUserStocks(context.Background())
+	stocks, err := xq.GetUserStocks(context.Background())
 	assert.NoError(t, err)
-	assert.NotNil(t, resp.Data)
+	assert.NotNil(t, stocks)
 
-	for _, stock := range resp.Data.Stocks {
+	t.Logf("stock cate: category=%v pid=%v", stocks.Category, stocks.Pid)
+	for _, stock := range stocks.Stocks {
 		t.Logf("%+v", stock)
+	}
+}
+
+func TestGetUserFollowReports(t *testing.T) {
+	xq, err := NewWithEnvToken()
+	assert.NoError(t, err)
+
+	ctx := context.Background()
+
+	reports, err := xq.GetUserFollowReports(ctx)
+	assert.NoError(t, err)
+
+	for symbol, report := range reports {
+
+		t.Logf("synbol:%v, %+v, reports:\n", symbol, report.FavStock)
+
+		for _, r := range report.CompanyReports {
+			t.Logf("company: %+v", r)
+		}
 	}
 }
