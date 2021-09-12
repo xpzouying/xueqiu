@@ -15,3 +15,10 @@
 export XQTOKEN="token1234567890"
 go run example/main.go
 ```
+
+
+
+运行结果
+
+![image-20210912133855322](asserts/image-20210912133855322.png)
+
