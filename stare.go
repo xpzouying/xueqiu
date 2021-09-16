@@ -33,13 +33,13 @@ type RespStareItem struct {
 	} `json:"data"`
 }
 
-// GetDynamicStareItem 获取关注动态
+// GetDynamicStareItems 获取关注动态
 func (xq *Xueqiu) GetDynamicStareItems(ctx context.Context) ([]*StareItem, error) {
 
 	return xq.getStareItems(ctx, CateDynamic)
 }
 
-// GetEventStareItem 获取关注动态
+// GetEventStareItems 获取关注动态
 func (xq *Xueqiu) GetEventStareItems(ctx context.Context) ([]*StareItem, error) {
 
 	return xq.getStareItems(ctx, CateEvent)
